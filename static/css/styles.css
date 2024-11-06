@@ -1,0 +1,70 @@
+/* static/css/styles.css */
+
+body {
+    background-color: #f8f9fa;
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  .card {
+    height: 100%;
+    border-radius: 15px;
+  }
+  
+  .card-header {
+    border-radius: 15px 15px 0 0;
+    background-color: #007bff;
+    color: #fff;
+  }
+  
+  .msg_cotainer {
+    background-color: #f1f0f0;
+    border-radius: 10px;
+    padding: 10px;
+    position: relative;
+    width: auto;
+    max-width: 70%;
+    word-wrap: break-word;
+  }
+  
+  .msg_cotainer_send {
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 10px;
+    padding: 10px;
+    position: relative;
+    width: auto;
+    max-width: 70%;
+    word-wrap: break-word;
+  }
+  
+  .msg_time, .msg_time_send {
+    position: absolute;
+    bottom: -20px;
+    font-size: 10px;
+    color: gray;
+  }
+  
+  .msg_time {
+    left: 0;
+  }
+  
+  .msg_time_send {
+    right: 0;
+  }
+  
+  .d-flex {
+    display: flex;
+  }
+  
+  .justify-content-end {
+    justify-content: flex-end;
+  }
+  
+  .justify-content-start {
+    justify-content: flex-start;
+  }
+  
+  .mb-2 {
+    margin-bottom: 0.5rem !important;
+  }
+  
