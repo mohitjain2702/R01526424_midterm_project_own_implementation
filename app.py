@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, session
 from azure.core.credentials import AzureKeyCredential
 from azure.search.documents import SearchClient
 from azure.search.documents.models import VectorizedQuery
@@ -9,12 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
-
-# Set up OpenAI API
-openai.api_type = "azure"
-openai.api_key = os.getenv('OPENAI_API_KEY')
-openai.api_base = os.getenv('OPENAI_API_BASE')
-openai.api_version = os.getenv('OPENAI_API_VERSION')
+app.secret_key = os.getenv('FLASK_SECRET_KEY')  # Set a secret key for session management
 
 # Set up OpenAI API
 openai.api_type = "azure"
@@ -28,16 +23,6 @@ search_endpoint = os.getenv('AZURE_SEARCH_ENDPOINT')
 index_name = os.getenv('AZURE_SEARCH_INDEX_NAME')
 credential = AzureKeyCredential(search_api_key)
 search_client = SearchClient(endpoint=search_endpoint, index_name=index_name, credential=credential)
-
-chat_history = []  # List to store the chat history
-
-def query_embedding(query):
-    response = openai.Embedding.create(
-        input=query,
-        engine=os.getenv('OPENAI_DEPLOYMENT_NAME')
-    )
-    embedding = response['data'][0]['embedding']
-    return embedding
 
 def query_embedding(query):
     response = openai.Embedding.create(
@@ -97,12 +82,16 @@ def process_user_query(query):
 
 @app.route('/', methods=['GET', 'POST'])
 def chat():
-    global chat_history
+    if 'chat_history' not in session:
+        session['chat_history'] = []  # Initialize session-specific chat history
+
     if request.method == 'POST':
         user_query = request.form['query']
         response = process_user_query(user_query)
-        chat_history.append({'query': user_query, 'response': response})
-    return render_template('chat.html', chat_history=chat_history)
+        session['chat_history'].append({'query': user_query, 'response': response})
+        session.modified = True  # Mark session as modified to save changes
+
+    return render_template('chat.html', chat_history=session['chat_history'])
 
 if __name__ == '__main__':
     app.run(debug=True)
