@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, render_template, session
+from flask import Flask, request, render_template, session, redirect, url_for
 from azure.core.credentials import AzureKeyCredential
 from azure.search.documents import SearchClient
 from azure.search.documents.models import VectorizedQuery
@@ -90,6 +90,9 @@ def chat():
         response = process_user_query(user_query)
         session['chat_history'].append({'query': user_query, 'response': response})
         session.modified = True  # Mark session as modified to save changes
+
+        # Redirect to clear the form submission state
+        return redirect(url_for('chat'))
 
     return render_template('chat.html', chat_history=session['chat_history'])
 
