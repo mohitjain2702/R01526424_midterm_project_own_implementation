@@ -49,13 +49,13 @@ chat_history_ai = []
 embeddings: AzureOpenAIEmbeddings = AzureOpenAIEmbeddings(
     azure_deployment="text-embedding-ada-002" ,
     openai_api_version="2024-06-01",
-    azure_endpoint="https://genai-llm-model.openai.azure.com/",
-    api_key="10oPy0AW8FMu5aF9zWEMQKdQnA7bZN6SchzxpwTUV0CqgdmjSbGKJQQJ99AKACYeBjFXJ3w3AAABACOGbWyQ",
+    azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
+    api_key=os.getenv("AZURE_OPENAI_API_KEY"),
 )
 
 vector_store: AzureSearch = AzureSearch(
-    azure_search_endpoint="https://demo-bro.search.windows.net",
-    azure_search_key="s8nUN48JXVT0rCUEPoFD5wKZ4qWF4Y4zyb1lBgz4WlAzSeBm4nPJ",
+    azure_search_endpoint=os.getenv("AZURE_SEARCH_ENDPOINT"),
+    azure_search_key=os.getenv("AZURE_SEARCH_KEY"),
     index_name="demo",
     embedding_function=embeddings.embed_query,
     
