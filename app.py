@@ -101,63 +101,7 @@ qa_prompt = ChatPromptTemplate.from_messages(
 question_answer_chain = create_stuff_documents_chain(llm, qa_prompt)
 rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chain)
 
-'''
-def query_embedding(query):
-    response = openai.Embedding.create(
-        input=query,
-        engine=os.getenv('OPENAI_DEPLOYMENT_NAME')
-    )
-    embedding = response['data'][0]['embedding']
-    return embedding
 
-def process_with_openai(query, results):
-    context = "\n".join([result['paragraph'] for result in results])
-
-    messages = [
-        {"role": "system", "content": "You are a helpful assistant."},
-        {
-            "role": "user",
-            "content": f"""Answer the following question: '{query}'.
-
-Use the provided context if it is relevant. The context is:
-{context}
-
-If the context is not relevant, please ignore it and answer the question as you normally would."""
-        }
-    ]
-
-    response = openai.ChatCompletion.create(
-        engine=os.getenv('OPENAI_GPT_DEPLOYMENT_NAME'),
-        messages=messages,
-        max_tokens=500
-    )
-
-    answer = response['choices'][0]['message']['content'].strip()
-    return answer
-
-def process_user_query(query):
-    # Get the query embedding
-    embedding = query_embedding(query)
-
-    # Search the Azure Cognitive Search index
-    results = search_client.search(
-        search_text=None,
-        vector_queries=[
-            VectorizedQuery(
-                vector=embedding,
-                k_nearest_neighbors=5,
-                fields="embedding"
-            )
-        ]
-    )
-
-    # Collect results into a list (if necessary)
-    results_list = list(results)
-
-    # Process results with OpenAI
-    answer = process_with_openai(query, results_list)
-    return answer
-'''
 @app.route('/', methods=['GET', 'POST'])
 def chat():
     if 'chat_history' not in session:
